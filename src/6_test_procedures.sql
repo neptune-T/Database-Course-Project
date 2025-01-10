@@ -42,7 +42,7 @@ GO
 -- 测试更新触发器
 PRINT '测试10: 测试更新时间戳触发器'
 UPDATE Characters 
-SET character_description = '星核猎手中的佼佼者，擅长冰属性攻击'
+SET character_description = '担任着星穹列车的护卫，对自己的过往始终讳莫如深'
 WHERE character_id = 1
 
 SELECT character_name, character_description, updated_at 
