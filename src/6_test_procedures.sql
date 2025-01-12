@@ -76,3 +76,80 @@ JOIN Enemies e ON ed.enemy_id = e.enemy_id
 JOIN Materials m ON ed.material_id = m.material_id
 ORDER BY ed.drop_rate DESC
 GO 
+
+-- 查询1：统计每个命途的角色数量和平均攻击力
+SELECT 
+    p.path_name AS '命途',
+    COUNT(*) AS '角色数量',
+    AVG(c.base_atk) AS '平均攻击力'
+FROM Characters c
+JOIN Paths p ON c.path_id = p.path_id
+GROUP BY p.path_name
+ORDER BY COUNT(*) DESC;
+
+-- 查询2：统计不同稀有度的材料数量
+SELECT 
+    rarity AS '稀有度',
+    COUNT(*) AS '材料数量',
+    material_type AS '材料类型'
+FROM Materials
+GROUP BY rarity, material_type
+ORDER BY rarity DESC;
+
+-- 嵌套查询1：查询拥有比平均速度更快的角色及其命途
+PRINT '测试13: 查询高速度角色'
+SELECT 
+    c.character_name AS '角色名称',
+    c.base_speed AS '速度',
+    p.path_name AS '命途'
+FROM Characters c
+JOIN Paths p ON c.path_id = p.path_id
+WHERE c.base_speed > (
+    SELECT AVG(base_speed)
+    FROM Characters
+)
+ORDER BY c.base_speed DESC;
+
+-- 嵌套查询2：查询拥有最高掉落率材料的敌人信息
+PRINT '测试14: 查询最佳掉落敌人'
+SELECT 
+    e.enemy_name AS '敌人名称',
+    e.enemy_type AS '敌人类型',
+    m.material_name AS '掉落材料'
+FROM Enemies e
+JOIN EnemyDrops ed ON e.enemy_id = ed.enemy_id
+JOIN Materials m ON ed.material_id = m.material_id
+WHERE ed.drop_rate = (
+    SELECT MAX(drop_rate)
+    FROM EnemyDrops
+);
+
+-- 统计查询1：按命途和稀有度统计角色分布
+PRINT '测试15: 角色分布统计'
+SELECT 
+    p.path_name AS '命途',
+    c.rarity AS '稀有度',
+    COUNT(*) AS '角色数量',
+    AVG(c.base_hp) AS '平均生命值',
+    AVG(c.base_atk) AS '平均攻击力',
+    AVG(c.base_def) AS '平均防御力'
+FROM Characters c
+JOIN Paths p ON c.path_id = p.path_id
+GROUP BY p.path_name, c.rarity
+HAVING COUNT(*) > 0
+ORDER BY c.rarity DESC, COUNT(*) DESC;
+
+-- 统计查询2：统计各类型敌人的材料掉落情况
+PRINT '测试16: 敌人掉落统计'
+SELECT 
+    e.enemy_type AS '敌人类型',
+    COUNT(DISTINCT e.enemy_id) AS '敌人数量',
+    COUNT(ed.material_id) AS '掉落材料种类',
+    AVG(ed.drop_rate) AS '平均掉落率',
+    MAX(ed.drop_rate) AS '最高掉落率'
+FROM Enemies e
+LEFT JOIN EnemyDrops ed ON e.enemy_id = ed.enemy_id
+GROUP BY e.enemy_type
+ORDER BY COUNT(DISTINCT e.enemy_id) DESC;
+GO
+

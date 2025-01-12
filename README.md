@@ -112,7 +112,7 @@ EXEC CalculateMaterialsNeeded @character_id = 1, @target_level = 60
 ## 致谢
 感谢数据库课设给的机会，感谢所有为星穹铁道数据库建设做出贡献的开拓者们提供的数据信息。
 
----
+
 
 <div align="center">
   <img src="ppt/img/1.0「通往群星的轨道」.png" width=100%>
