@@ -111,7 +111,7 @@ EXEC CalculateMaterialsNeeded @character_id = 1, @target_level = 60
 
 ## 致谢
 感谢数据库课设给的机会，感谢所有为星穹铁道数据库建设做出贡献的开拓者们提供的数据信息。
-
+感谢[DLA](https://github.com/00lostin00)帮我搜索整理数据。
 
 
 <div align="center">
